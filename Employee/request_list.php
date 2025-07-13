@@ -1,7 +1,7 @@
 <?php
 session_start(); // pastikan session dimulai
 $judul = 'History';
-include '../proses/check_supervisor.php';
+include '../proses/check_employee.php';
 include '../connection.php';
 $no = 1;
 ?>
@@ -43,7 +43,7 @@ $no = 1;
                 $query = "SELECT a.id_pengajuan, a.employee_name, a.email_address, a.type, a.date_from, a.date_to, a.email_spv, a.timestamp, a.status, b.approval_spv 
           FROM tbl_pengajuan a 
           LEFT JOIN tbl_approval b ON a.id_pengajuan = b.id_pengajuan 
-          WHERE a.email_spv = '$email_address' AND b.approval_spv != 'Open'";
+          WHERE a.email_address = '$email_address'";
                 $result = mysqli_query($koneksi, $query);
 
                 $no = 1;
@@ -53,8 +53,8 @@ $no = 1;
                   <thead class="thead-light">
                     <tr>
                       <th scope="col" class="text-center">No</th>
-                      <th scope="col" class="text-center">Employee Name</th>
-                      <th scope="col" class="text-center">Email Address</th>
+                      <!-- <th scope="col" class="text-center">Employee Name</th>
+                      <th scope="col" class="text-center">Email Address</th> -->
                       <th scope="col" class="text-center">Leave Type</th>
                       <th scope="col" class="text-center">Date From</th>
                       <th scope="col" class="text-center">Date To</th>
@@ -65,16 +65,16 @@ $no = 1;
                     <?php while ($row = mysqli_fetch_assoc($result)): ?>
                       <tr>
                         <td class="text-center"><?= $no++; ?></td>
-                        <td class="text-center"><?= htmlspecialchars($row['employee_name']); ?></td>
-                        <td class="text-center"><?= htmlspecialchars($row['email_address']); ?></td>
+                        <!-- <td class="text-center"><?= htmlspecialchars($row['employee_name']); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($row['email_address']); ?></td> -->
                         <td class="text-center"><?= htmlspecialchars($row['type']); ?></td>
                         <td class="text-center"><?= date('M d, Y', strtotime($row['date_from'])); ?></td>
                         <td class="text-center"><?= date('M d, Y', strtotime($row['date_to'])); ?></td>
                         <td class="text-center">
                           <span
                             class="badge 
-            <?= $row['approval_spv'] === 'Approved' ? 'bg-success' : ($row['approval_spv'] === 'Rejected' ? 'bg-danger' : 'bg-secondary'); ?>">
-                            <?= htmlspecialchars($row['approval_spv']); ?>
+            <?= $row['status'] === 'Completed' ? 'bg-success' : ($row['status'] === 'Rejected' ? 'bg-danger' : 'bg-secondary'); ?>">
+                            <?= htmlspecialchars($row['status']); ?>
                           </span>
                         </td>
                       </tr>

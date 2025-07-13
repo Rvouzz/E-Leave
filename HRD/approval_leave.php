@@ -1,7 +1,7 @@
 <?php
 session_start();
 $judul = 'My Approval';
-include '../proses/check_supervisor.php';
+include '../proses/check_hrd.php';
 include '../connection.php';
 ?>
 <?php include '../header.php'; ?>
@@ -74,7 +74,7 @@ include '../connection.php';
         $sql = "SELECT a.id_approval, b.employee_name, b.email_address, b.type, b.date_from, b.date_to 
           FROM tbl_approval a 
           LEFT JOIN tbl_pengajuan b ON a.id_pengajuan = b.id_pengajuan 
-          WHERE b.email_spv = '$email_address' AND a.approval_spv = 'Open'";
+          WHERE a.approval_hrd = 'Open'";
         $result = mysqli_query($koneksi, $sql);
 
         if (mysqli_num_rows($result) > 0):
@@ -180,9 +180,12 @@ include '../connection.php';
               icon: 'success',
               timer: 1500,
               showConfirmButton: false
-            }).then(() => {
-              location.reload(); // ✅ Refresh halaman setelah sukses
             });
+
+            // Reload halaman setelah notifikasi sukses
+            setTimeout(() => {
+              location.reload();
+            }, 1600);
           },
           error: function () {
             Swal.fire({

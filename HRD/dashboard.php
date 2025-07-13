@@ -1,7 +1,7 @@
 <?php
 session_start(); // pastikan session dimulai
 $judul = 'Dashboard';
-include '../proses/check_admin.php';
+include '../proses/check_hrd.php';
 include '../connection.php';
 ?>
 <?php include '../header.php'; ?>
@@ -19,34 +19,9 @@ include '../connection.php';
         </div>
       </div> -->
       <div class="row">
-        <!-- Departments (NEW) -->
-        <div class="col-sm-6 col-md-3">
-          <div class="card card-stats card-round">
-            <div class="card-body">
-              <div class="row align-items-center">
-                <div class="col-icon">
-                  <div class="icon-big text-center icon-warning bubble-shadow-small">
-                    <i class="fas fa-building"></i>
-                  </div>
-                </div>
-                <div class="col col-stats ms-3 ms-sm-0">
-                  <div class="numbers">
-                    <p class="card-category">Departments</p>
-                    <h4 class="card-title">
-                      <?php
-                      $q = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM mst_dept"));
-                      echo $q['total'];
-                      ?>
-                    </h4>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Employees -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4">
           <div class="card card-stats card-round">
             <div class="card-body">
               <div class="row align-items-center">
@@ -72,21 +47,22 @@ include '../connection.php';
         </div>
 
         <!-- Supervisors -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4">
           <div class="card card-stats card-round">
             <div class="card-body">
               <div class="row align-items-center">
                 <div class="col-icon">
                   <div class="icon-big text-center icon-primary bubble-shadow-small">
-                    <i class="fas fa-user"></i>
+                    <i class="fas fa-hourglass-half"></i>
+
                   </div>
                 </div>
                 <div class="col col-stats ms-3 ms-sm-0">
                   <div class="numbers">
-                    <p class="card-category">Pending Approval</p>
+                    <p class="card-category">Waiting Approval</p>
                     <h4 class="card-title">
                       <?php
-                      $q = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM tbl_users WHERE status_account = 'Pending'"));
+                      $q = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM tbl_pengajuan a LEFT JOIN tbl_approval b ON a.id_pengajuan = b.id_pengajuan WHERE b.approval_hrd = 'Open'"));
                       echo $q['total'];
                       ?>
                     </h4>
@@ -98,7 +74,7 @@ include '../connection.php';
         </div>
 
         <!-- Submissions -->
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-4">
           <div class="card card-stats card-round">
             <div class="card-body">
               <div class="row align-items-center">
@@ -110,7 +86,12 @@ include '../connection.php';
                 <div class="col col-stats ms-3 ms-sm-0">
                   <div class="numbers">
                     <p class="card-category">Submissions</p>
-                    <h4 class="card-title">1</h4>
+                    <h4 class="card-title">
+                      <?php
+                      $q = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM tbl_pengajuan"));
+                      echo $q['total'];
+                      ?>
+                    </h4>
                   </div>
                 </div>
               </div>
@@ -154,10 +135,24 @@ include '../connection.php';
           <div class="card card-round">
             <div class="card-header">
               <div class="card-head-row card-tools-still-right">
-                <div class="card-title text-center w-100">Submissions History</div>
+                <div class="card-title">Approval History</div>
+                <!-- <div class="card-tools">
+                  <button class="btn btn-label-success btn-round btn-sm me-2" title="Export Data">
+                    <span class="btn-label">
+                      <i class="fa fa-file-export"></i>
+                    </span>
+                    Export
+                  </button>
+                  <a href="#" class="btn btn-label-info btn-round btn-sm">
+                    <span class="btn-label">
+                      <i class="fa fa-print"></i>
+                    </span>
+                    Print
+                  </a>
+                </div> -->
               </div>
             </div>
-            <div class="card-body p-3">
+            <div class="card-body p-2">
               <div class="table-responsive">
                 <!-- Projects table -->
                 <table id="approvalTable" class="table align-items-center mb-0">
@@ -171,8 +166,8 @@ include '../connection.php';
                   </thead>
                   <tbody>
                     <?php
-                    $query = "SELECT a.id_pengajuan, a.employee_name, a.email_address, a.type, a.date_from, a.date_to, a.email_spv, a.timestamp, a.status, b.approval_spv
-              FROM tbl_pengajuan a LEFT JOIN tbl_approval b ON a.id_pengajuan = b.id_pengajuan";
+                    $query = "SELECT a.id_pengajuan, a.employee_name, a.email_address, a.type, a.date_from, a.date_to, a.email_spv, a.timestamp, a.status, b.approval_hrd
+              FROM tbl_pengajuan a LEFT JOIN tbl_approval b ON a.id_pengajuan = b.id_pengajuan WHERE b.approval_hrd != 'Open' AND b.approval_hrd != '' AND b.approval_hrd IS NOT NULL";
 
                     $result = mysqli_query($koneksi, $query);
 
@@ -183,15 +178,14 @@ include '../connection.php';
                         $avatar_url = "https://ui-avatars.com/api/?name={$name_encoded}&background=random&color=fff&rounded=true";
                         $timestamp = date("M d, Y, g:i A", strtotime($row['timestamp']));
                         $type = $row['type'];
-                        $status = $row['status'];
+                        $status = $row['approval_hrd'];
 
                         // Badge styling based on status
-                        if ($status === 'Completed')
-                          $badgeClass = 'btn-success';
+                        $badgeClass = 'badge-secondary';
+                        if ($status === 'Approved')
+                          $badgeClass = 'badge-success';
                         elseif ($status === 'Rejected')
-                          $badgeClass = 'btn-danger';
-                        elseif ($status === 'Open')
-                          $badgeClass = 'btn-warning';
+                          $badgeClass = 'badge-danger';
                         ?>
                         <tr>
                           <th scope="row" class="d-flex align-items-center">
@@ -200,10 +194,9 @@ include '../connection.php';
                             <?= htmlspecialchars($name) ?>
                           </th>
                           <td class="text-center"><?= $timestamp ?></td>
-                          <td class="text-center"><?= htmlspecialchars($type) ?></td>
+                          <td class="text-center" style="width: 20%;"><?= htmlspecialchars($type) ?></td>
                           <td class="text-center">
-                            <button class="btn btn-sm <?= $badgeClass ?>" disabled
-                              style="width: 70%;"><?= htmlspecialchars($status) ?></button>
+                            <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($status) ?></span>
                           </td>
                         </tr>
                         <?php
@@ -214,6 +207,7 @@ include '../connection.php';
                     ?>
                   </tbody>
                 </table>
+
               </div>
             </div>
           </div>
@@ -230,6 +224,7 @@ include '../connection.php';
   const currentYear = new Date().getFullYear();
   document.getElementById("chartTitle").innerText = `Leave Application Summary - ${currentYear}`;
   document.getElementById("chartTitle1").innerText = `Leave Application Department Summary - ${currentYear}`;
+
 
   $(document).ready(function () {
     $('#approvalTable').DataTable({
@@ -398,6 +393,5 @@ include '../connection.php';
 
 
   });
-
 
 </script>

@@ -62,7 +62,7 @@ include '../connection.php';
                     <p class="card-category">Waiting Approval</p>
                     <h4 class="card-title">
                       <?php
-                      $q = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM tbl_pengajuan a LEFT JOIN tbl_approval b ON a.id_pengajuan = b.id_pengajuan WHERE  a.email_spv = '$email_address'"));
+                      $q = mysqli_fetch_assoc(mysqli_query($koneksi, "SELECT COUNT(*) AS total FROM tbl_pengajuan a LEFT JOIN tbl_approval b ON a.id_pengajuan = b.id_pengajuan WHERE  a.email_spv = '$email_address' AND b.approval_spv = 'Open'"));
                       echo $q['total'];
                       ?>
                     </h4>
@@ -101,41 +101,11 @@ include '../connection.php';
       </div>
 
       <div class="row">
-        <div class="col-md-5">
-          <div class="card card-round">
-            <div class="card-header">
-              <div class="card-head-row">
-                <div class="card-title">Submissions Overview</div>
-                <div class="card-tools">
-                  <button class="btn btn-label-success btn-round btn-sm me-2" title="Export Data">
-                    <span class="btn-label">
-                      <i class="fa fa-file-export"></i>
-                    </span>
-                    Export
-                  </button>
-                  <a href="#" class="btn btn-label-info btn-round btn-sm">
-                    <span class="btn-label">
-                      <i class="fa fa-print"></i>
-                    </span>
-                    Print
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="chart-container" style="min-height: 375px">
-                <canvas id="statisticsChart"></canvas>
-              </div>
-              <div id="myChartLegend"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-7">
+        <div class="col-md-12">
           <div class="card card-round">
             <div class="card-header">
               <div class="card-head-row card-tools-still-right">
-                <div class="card-title">Approval History</div>
+                <div class="card-title text-center w-100">Approval History</div>
                 <!-- <div class="card-tools">
                   <button class="btn btn-label-success btn-round btn-sm me-2" title="Export Data">
                     <span class="btn-label">
@@ -193,9 +163,9 @@ include '../connection.php';
                               style="width: 35px; height: 35px;">
                             <?= htmlspecialchars($name) ?>
                           </th>
-                          <td class="text-end"><?= $timestamp ?></td>
-                          <td class="text-end" style="width: 20%;"><?= htmlspecialchars($type) ?></td>
-                          <td class="text-end">
+                          <td class="text-center"><?= $timestamp ?></td>
+                          <td class="text-center" style="width: 20%;"><?= htmlspecialchars($type) ?></td>
+                          <td class="text-center">
                             <span class="badge <?= $badgeClass ?>"><?= htmlspecialchars($status) ?></span>
                           </td>
                         </tr>

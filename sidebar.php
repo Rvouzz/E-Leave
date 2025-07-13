@@ -98,7 +98,24 @@ if ($result_open && mysqli_num_rows($result_open) > 0) {
               <p>Dashboard</p>
             </a>
           </li>
+
+          <!-- Form Request -->
+          <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'form_request.php' ? 'active' : '' ?>">
+            <a href="form_request.php">
+              <i class="fas fa-edit"></i>
+              <p>Form Request</p>
+            </a>
+          </li>
+
+          <!-- Request List -->
+          <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'request_list.php' ? 'active' : '' ?>">
+            <a href="request_list.php">
+              <i class="fas fa-list"></i>
+              <p>Request List</p>
+            </a>
+          </li>
         <?php endif; ?>
+
 
         <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Supervisor'): ?>
           <!-- Dashboard -->
@@ -144,11 +161,41 @@ if ($result_open && mysqli_num_rows($result_open) > 0) {
 
         <?php endif; ?>
 
-        <!-- Section: Components -->
-        <!-- <li class="nav-section">
-          <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
-          <h4 class="text-section">Components</h4>
-        </li> -->
+        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'HRD'): ?>
+          <!-- Dashboard -->
+          <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : '' ?>">
+            <a href="dashboard.php">
+              <i class="fas fa-home"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+
+          <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'approval_leave.php' ? 'active' : '' ?>">
+            <a href="approval_leave.php" class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-check"></i>
+                <p>My Approval</p>
+              </div>
+              <?php if ($count_pending > 0): ?>
+                <span class="badge bg-danger ms-2"><?= $count_pending ?></span>
+              <?php endif; ?>
+            </a>
+          </li>
+
+          <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'history_leave.php' ? 'active' : '' ?>">
+            <a href="history_leave.php">
+              <i class="fas fa-history"></i> <!-- Changed icon to represent a department -->
+              <p>History</p> <!-- Updated menu label -->
+            </a>
+          </li>
+
+          <!-- Section: Components -->
+          <!-- <li class="nav-section">
+            <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
+            <h4 class="text-section">Main Section</h4>
+          </li> -->
+
+        <?php endif; ?>
 
         <!-- <li class="nav-item">
           <a href="#" id="logoutButton">
