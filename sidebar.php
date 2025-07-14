@@ -1,5 +1,17 @@
 <?php
 session_start();
+
+$timeout_duration = 900; // 900 detik = 15 menit
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
+  session_unset();
+  session_destroy();
+  session_start(); // restart session untuk pesan error
+  $_SESSION['login_error'] = "Session expired. Please log in again.";
+  header("Location: ../authentication-login.php");
+  exit();
+}
+$_SESSION['LAST_ACTIVITY'] = time(); // reset waktu aktivitas jika belum kedaluwarsa
+
 if (!isset($_SESSION['email_address'])) {
   session_unset();
   session_destroy();
@@ -18,6 +30,24 @@ $count_pending = 0;
 if ($result_open && mysqli_num_rows($result_open) > 0) {
   $data = mysqli_fetch_assoc($result_open);
   $count_pending = $data['total'];
+}
+
+$get_hrd = "SELECT COUNT(*) AS total FROM tbl_approval WHERE approval_hrd = 'Open'";
+$result_hrd = mysqli_query($koneksi, $get_hrd);
+$count_hrd = 0;
+
+if ($result_hrd && mysqli_num_rows($result_hrd) > 0) {
+  $data = mysqli_fetch_assoc($result_hrd);
+  $count_hrd = $data['total'];
+}
+
+$get_admin = "SELECT COUNT(*) AS total FROM tbl_users WHERE status_account = 'Pending'";
+$result_admin = mysqli_query($koneksi, $get_admin);
+$count_admin = 0;
+
+if ($result_admin && mysqli_num_rows($result_admin) > 0) {
+  $data = mysqli_fetch_assoc($result_admin);
+  $result_admin = $data['total'];
 }
 ?>
 
@@ -61,9 +91,14 @@ if ($result_open && mysqli_num_rows($result_open) > 0) {
           </li>
 
           <li class="nav-item <?= basename($_SERVER['PHP_SELF']) == 'user_approval.php' ? 'active' : '' ?>">
-            <a href="user_approval.php">
-              <i class="fas fa-user-check"></i>
-              <p>User Approval</p>
+            <a href="user_approval.php" class="d-flex justify-content-between align-items-center">
+              <div>
+                <i class="fas fa-user-check"></i>
+                <p>User Approval</p>
+              </div>
+              <?php if ($result_admin > 0): ?>
+                <span class="badge bg-danger ms-2"><?= $result_admin ?></span>
+              <?php endif; ?>
             </a>
           </li>
 
@@ -176,8 +211,8 @@ if ($result_open && mysqli_num_rows($result_open) > 0) {
                 <i class="fas fa-check"></i>
                 <p>My Approval</p>
               </div>
-              <?php if ($count_pending > 0): ?>
-                <span class="badge bg-danger ms-2"><?= $count_pending ?></span>
+              <?php if ($count_hrd > 0): ?>
+                <span class="badge bg-danger ms-2"><?= $count_hrd ?></span>
               <?php endif; ?>
             </a>
           </li>

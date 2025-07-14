@@ -45,7 +45,7 @@ $email_address = $_SESSION['email_address'];
 
       <!-- Statistic Cards -->
       <div class="row">
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3">
           <div class="card shadow-sm border-0">
             <div class="card-body d-flex align-items-center">
               <div class="text-info bg-light rounded-circle p-3 me-3">
@@ -64,7 +64,7 @@ $email_address = $_SESSION['email_address'];
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3">
           <div class="card shadow-sm border-0">
             <div class="card-body d-flex align-items-center">
               <div class="text-primary bg-light rounded-circle p-3 me-3">
@@ -83,7 +83,7 @@ $email_address = $_SESSION['email_address'];
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3">
           <div class="card shadow-sm border-0">
             <div class="card-body d-flex align-items-center">
               <div class="text-success bg-light rounded-circle p-3 me-3">
@@ -102,7 +102,7 @@ $email_address = $_SESSION['email_address'];
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-3 mb-3">
+        <div class="col-sm-6 col-md-3">
           <div class="card shadow-sm border-0">
             <div class="card-body d-flex align-items-center">
               <div class="text-danger bg-light rounded-circle p-3 me-3">
@@ -133,7 +133,7 @@ $email_address = $_SESSION['email_address'];
       }
       $averageDays = $totalReq > 0 ? round($totalDays / $totalReq, 1) : 0;
       ?>
-      <div class="row" style="margin-top: -1.5rem">
+      <div class="row">
         <div class="col-md-6">
           <div class="alert alert-primary shadow-sm"><strong>Total Leave Days:</strong> <?= $totalDays ?> day</div>
         </div>
@@ -145,7 +145,7 @@ $email_address = $_SESSION['email_address'];
 
       <div class="row mt-2">
         <!-- Recent Leave Requests -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4 mb-md-0">
           <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white text-center">
               <h5 class="mb-0">Recent Leave Requests</h5>
@@ -194,7 +194,7 @@ $email_address = $_SESSION['email_address'];
         </div>
 
         <!-- Approval Timeline -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4 mb-md-0">
           <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white">
               <h5 class="mb-0 text-center">Approval Timeline (Latest)</h5>
@@ -272,8 +272,6 @@ $email_address = $_SESSION['email_address'];
             </div>
           </div>
         </div>
-
-
       </div>
 
       <!-- Leave Status Donut Chart -->

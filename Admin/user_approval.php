@@ -186,32 +186,10 @@ include '../header.php';
               title: `User ${action === 'Active' ? 'Approved' : 'Rejected'}!`,
               text: `User has been successfully ${actionText}d.`,
               icon: 'success',
-              timer: 2000,
+              timer: 1500,
               showConfirmButton: false
-            });
-
-            // Remove card
-            $(btn).closest('.user-card').fadeOut(300, function () {
-              $(this).remove();
-              if ($('.user-card:visible').length === 0) {
-                $('#userCardContainer').html(`
-                  <div class="col-12">
-                    <div class="card text-center border-0 shadow-sm py-5 bg-light rounded-4">
-                      <div class="card-body">
-                        <div class="mb-3 text-primary" style="font-size: 2.5rem;">
-                          <i class="fas fa-user-clock"></i>
-                        </div>
-                        <h5 class="card-title text-muted mb-2 fw-semibold">
-                          No users pending approval at the moment.
-                        </h5>
-                        <p class="text-secondary small">
-                          All user requests have been processed or there are currently no new submissions.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                `);
-              }
+            }).then(() => {
+              location.reload(); // Reload page to reflect changes
             });
           },
           error: function () {
@@ -223,6 +201,8 @@ include '../header.php';
             });
           }
         });
+
+
       }
     });
   }

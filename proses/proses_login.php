@@ -1,5 +1,6 @@
 <?php
 include '../connection.php';
+
 session_start();
 
 $email_address = $_POST['email_address'];
@@ -53,6 +54,7 @@ if (mysqli_num_rows($result) > 0) {
     $_SESSION['role'] = $row['role'];
     $_SESSION['department'] = $row['department'];
     $_SESSION['status_account'] = $row['status_account'];
+    $_SESSION['LAST_ACTIVITY'] = time(); // <--- tambahkan baris ini
 
     // Redirect based on role
     switch ($row['role']) {
